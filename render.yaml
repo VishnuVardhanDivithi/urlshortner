@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: linkshrink-backend
+    env: node
+    buildCommand: cd server && npm install && npm run build
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+
+  - type: web
+    name: linkshrink-frontend
+    env: node
+    buildCommand: cd project && npm install && npm run build
+    startCommand: cd project && node server.js
+    envVars:
+      - key: VITE_API_URL
+        sync: false
