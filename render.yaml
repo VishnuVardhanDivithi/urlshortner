@@ -2,8 +2,9 @@ services:
   - type: web
     name: linkshrink
     env: node
-    buildCommand: chmod +x build.sh && ./build.sh
-    startCommand: cd server && npm start
+    rootDir: server
+    buildCommand: cd .. && chmod +x build.sh && ./build.sh
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production

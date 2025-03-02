@@ -102,8 +102,83 @@ if (process.env.NODE_ENV === 'production') {
     });
   } else {
     console.error('Frontend directory not found in any of the expected locations');
+    // Create a simple HTML page as a fallback
     app.get('/', (_req, res) => {
-      res.send('URL Shortener API is running, but frontend is not available');
+      res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>LinkShrink URL Shortener</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              margin: 0;
+              padding: 20px;
+              color: #333;
+              max-width: 800px;
+              margin: 0 auto;
+            }
+            h1 {
+              color: #2c3e50;
+              border-bottom: 2px solid #3498db;
+              padding-bottom: 10px;
+            }
+            .api-section {
+              background-color: #f8f9fa;
+              padding: 15px;
+              border-radius: 5px;
+              margin-top: 20px;
+            }
+            code {
+              background-color: #eee;
+              padding: 2px 5px;
+              border-radius: 3px;
+              font-family: monospace;
+            }
+            .endpoint {
+              margin-bottom: 15px;
+            }
+            .method {
+              font-weight: bold;
+              color: #3498db;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>LinkShrink URL Shortener API</h1>
+          <p>The API is running successfully, but the frontend is not available.</p>
+          
+          <div class="api-section">
+            <h2>API Endpoints</h2>
+            
+            <div class="endpoint">
+              <p><span class="method">POST</span> <code>/api/urls</code> - Create a new short URL</p>
+            </div>
+            
+            <div class="endpoint">
+              <p><span class="method">GET</span> <code>/api/urls/:id</code> - Get details for a specific URL</p>
+            </div>
+            
+            <div class="endpoint">
+              <p><span class="method">GET</span> <code>/api/urls</code> - List all URLs</p>
+            </div>
+            
+            <div class="endpoint">
+              <p><span class="method">GET</span> <code>/api/analytics/:id</code> - Get analytics for a URL</p>
+            </div>
+            
+            <div class="endpoint">
+              <p><span class="method">DELETE</span> <code>/api/urls/:id</code> - Delete a URL</p>
+            </div>
+          </div>
+          
+          <p>For more information, please refer to the API documentation.</p>
+        </body>
+        </html>
+      `);
     });
   }
 } else {

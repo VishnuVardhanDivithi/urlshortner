@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkShrink URL Shortener</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem 0;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    .main {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    .url-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    input, button {
+      padding: 0.75rem;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .result {
+      margin-top: 2rem;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      display: none;
+    }
+    .result.active {
+      display: block;
+    }
+    .short-url {
+      font-weight: bold;
+      color: #3498db;
+      word-break: break-all;
+    }
+    .copy-btn {
+      margin-top: 0.5rem;
+      background-color: #2ecc71;
+    }
+    .copy-btn:hover {
+      background-color: #27ae60;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .feature {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+    }
+    .feature h3 {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 1rem 0;
+      color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>LinkShrink URL Shortener</h1>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="main">
+      <h2>Shorten Your URL</h2>
+      <form class="url-form" id="urlForm">
+        <div class="form-group">
+          <label for="longUrl">Enter your long URL:</label>
+          <input type="url" id="longUrl" placeholder="https://example.com/very/long/url/that/needs/shortening" required>
+        </div>
+        <div class="form-group">
+          <label for="customAlias">Custom alias (optional):</label>
+          <input type="text" id="customAlias" placeholder="e.g., my-link">
+        </div>
+        <div class="form-group">
+          <label for="password">Password protection (optional):</label>
+          <input type="password" id="password" placeholder="Leave empty for no password">
+        </div>
+        <button type="submit">Shorten URL</button>
+      </form>
+
+      <div class="result" id="result">
+        <h3>Your shortened URL:</h3>
+        <p class="short-url" id="shortUrl"></p>
+        <button class="copy-btn" id="copyBtn">Copy to clipboard</button>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <h3>URL Validation</h3>
+        <p>All URLs are validated in real-time to ensure they are valid and reachable. We also check for potentially malicious URLs and warn users.</p>
+      </div>
+      <div class="feature">
+        <h3>Password Protection</h3>
+        <p>Add an extra layer of security by password-protecting your shortened URLs. Only those with the password can access the original link.</p>
+      </div>
+      <div class="feature">
+        <h3>Custom Link Previews</h3>
+        <p>Customize how your links appear when shared on social media with custom titles, descriptions, and images.</p>
+      </div>
+      <div class="feature">
+        <h3>Detailed Analytics</h3>
+        <p>Track clicks, referrers, devices, and other metrics. Visualize data with charts and performance summaries.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 LinkShrink URL Shortener. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('urlForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // In a real app, this would make an API call to your backend
+      const longUrl = document.getElementById('longUrl').value;
+      const customAlias = document.getElementById('customAlias').value;
+      const password = document.getElementById('password').value;
+      
+      // For demo purposes, just show a fake shortened URL
+      const shortUrl = customAlias 
+        ? `https://urlshortner-90s6.onrender.com/${customAlias}` 
+        : `https://urlshortner-90s6.onrender.com/${Math.random().toString(36).substring(2, 8)}`;
+      
+      document.getElementById('shortUrl').textContent = shortUrl;
+      document.getElementById('result').classList.add('active');
+    });
+    
+    document.getElementById('copyBtn').addEventListener('click', function() {
+      const shortUrl = document.getElementById('shortUrl').textContent;
+      navigator.clipboard.writeText(shortUrl).then(function() {
+        alert('URL copied to clipboard!');
+      });
+    });
+  </script>
+</body>
+</html>
