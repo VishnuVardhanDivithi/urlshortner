@@ -16,39 +16,9 @@ export const updateBaseUrls = (newBaseUrl: string) => {
   }
 };
 
-// Detect the server URL by trying multiple possible locations
-const detectServerUrl = async (): Promise<string> => {
-  try {
-    // If we have an environment variable, use that
-    if (import.meta.env.VITE_API_URL) {
-      API_BASE_URL = import.meta.env.VITE_API_URL;
-      console.log('Using API URL from environment:', API_BASE_URL);
-      return API_BASE_URL;
-    }
-    
-    // Update the CLIENT_BASE_URL to the current origin
-    CLIENT_BASE_URL = window.location.origin;
-    console.log('Client base URL set to:', CLIENT_BASE_URL);
-    
-    // If we're running on localhost, use the default localhost URL
-    const hostname = window.location.hostname;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return API_BASE_URL;
-    } else {
-      // If in production, construct API URL based on the deployment
-      const serverUrl = `${window.location.origin}/api`;
-      updateBaseUrls(serverUrl);
-    }
-    
-    return API_BASE_URL;
-  } catch (error) {
-    console.error('Error detecting server URL:', error);
-    return API_BASE_URL;
-  }
-};
-
-// Initialize by detecting the server URL
-detectServerUrl().catch(console.error);
+// No need to detect server URL anymore since we're using relative URLs
+console.log('Using relative API URL:', API_BASE_URL);
+console.log('Client base URL set to:', CLIENT_BASE_URL);
 
 // Helper to get auth token from localStorage
 const getAuthToken = (): string | null => {
@@ -92,11 +62,11 @@ export const createShortUrl = async (formData: UrlFormData): Promise<UrlData> =>
       throw new Error('Invalid URL format. Please check your URL and try again.');
     }
     
-    console.log('Sending request to API:', `${API_BASE_URL}/urls`, formData);
+    console.log('Sending request to API:', `/urls`, formData);
     
     try {
       const headers = getAuthHeaders();
-      const response = await axios.post(`${API_BASE_URL}/urls`, formData, { headers });
+      const response = await axios.post(`/urls`, formData, { headers });
       console.log('Server response:', response.data);
       return response.data;
     } catch (axiosError: any) {
@@ -153,7 +123,7 @@ export const getAllUrls = async (): Promise<UrlData[]> => {
   try {
     try {
       const headers = getAuthHeaders();
-      const response = await axios.get(`${API_BASE_URL}/urls`, { headers });
+      const response = await axios.get(`/urls`, { headers });
       return response.data;
     } catch (axiosError: any) {
       // For demo purposes, if the server is not available, return mock data
@@ -198,7 +168,7 @@ export const getUrlAnalytics = async (shortCode: string): Promise<any> => {
   try {
     console.log('Getting analytics for URL:', shortCode);
     const headers = getAuthHeaders();
-    const response = await axios.get(`${API_BASE_URL}/urls/${shortCode}/analytics`, { headers });
+    const response = await axios.get(`/urls/${shortCode}/analytics`, { headers });
     console.log('URL analytics received:', response.data);
     return response.data;
   } catch (axiosError: any) {
@@ -237,9 +207,9 @@ export const getUrlAnalytics = async (shortCode: string): Promise<any> => {
 // Get analytics data for the current user
 export const getAnalytics = async (): Promise<any> => {
   try {
-    console.log('Getting analytics data from:', `${API_BASE_URL}/analytics`);
+    console.log('Getting analytics data from:', `/analytics`);
     const headers = getAuthHeaders();
-    const response = await axios.get(`${API_BASE_URL}/analytics`, { headers });
+    const response = await axios.get(`/analytics`, { headers });
     console.log('Analytics data received:', response.data);
     return response.data;
   } catch (axiosError: any) {
@@ -328,7 +298,7 @@ export const deactivateUrl = async (shortCode: string): Promise<void> => {
   try {
     console.log('Deactivating URL:', shortCode);
     const headers = getAuthHeaders();
-    await axios.put(`${API_BASE_URL}/urls/${shortCode}/deactivate`, {}, { headers });
+    await axios.put(`/urls/${shortCode}/deactivate`, {}, { headers });
     console.log('URL deactivated successfully');
   } catch (axiosError: any) {
     // For demo purposes, if the server is not available, just log
@@ -345,7 +315,7 @@ export const activateUrl = async (shortCode: string): Promise<void> => {
   try {
     console.log('Activating URL:', shortCode);
     const headers = getAuthHeaders();
-    await axios.put(`${API_BASE_URL}/urls/${shortCode}/activate`, {}, { headers });
+    await axios.put(`/urls/${shortCode}/activate`, {}, { headers });
     console.log('URL activated successfully');
   } catch (axiosError: any) {
     // For demo purposes, if the server is not available, just log
@@ -371,7 +341,7 @@ export const trackUrlClick = async (shortCode: string, referrer?: string, userAg
       userAgent: userAgent || navigator.userAgent
     };
     
-    await axios.post(`${API_BASE_URL}/urls/${shortCode}/click`, clickData);
+    await axios.post(`/urls/${shortCode}/click`, clickData);
     console.log('Click tracked successfully');
   } catch (error) {
     console.error('Error tracking click:', error);
@@ -443,7 +413,7 @@ export const verifyUrlPassword = async (shortCode: string, password: string): Pr
       };
     }
     
-    const response = await axios.post(`${API_BASE_URL}/urls/${shortCode}/verify`, { password });
+    const response = await axios.post(`/urls/${shortCode}/verify`, { password });
     
     if (response.data && response.data.originalUrl) {
       return {
