@@ -1,4 +1,9 @@
 #!/bin/bash
+set -e  # Exit immediately if a command exits with a non-zero status
+
+echo "Current directory: $(pwd)"
+echo "Listing files:"
+ls -la
 
 # Install and build frontend first
 echo "Building frontend..."
@@ -18,5 +23,9 @@ npx tsc
 echo "Setting up frontend files for serving..."
 mkdir -p dist/public
 cp -r ../project/dist/* dist/public/
+
+# Verify the files were copied correctly
+echo "Verifying frontend files:"
+ls -la dist/public/
 
 echo "Build completed successfully!"
